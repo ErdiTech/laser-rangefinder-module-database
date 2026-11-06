@@ -8,6 +8,9 @@ Use it to compare range, accuracy, update rate, interface, weight and public pri
 - `data/modules.csv` — the same rows for spreadsheets / pandas
 - `data/schema.json` — field list
 - `scripts/validate.py` — checks every row has every field and that numbers are numbers
+- `MODULES.md` — all modules as one readable table
+- `docs/index.html` — sortable, filterable table (GitHub Pages: https://tommyapi.github.io/laser-rangefinder-module-database/)
+- `query.py` — command-line filter by range, interface, wavelength, weight, price
 
 ## Coverage
 
@@ -53,6 +56,9 @@ print(df[df.max_range_m >= 1000].sort_values("weight_g")[["brand","model","max_r
 ```
 
 ```bash
+python query.py --min-range 1000 --interface UART      # long-range UART modules
+python query.py --wavelength 1535 --max-weight 50 --format csv
+python -m pytest -q                                   # validate + query tests
 python scripts/validate.py          # exits non-zero on a bad row
 ```
 

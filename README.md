@@ -9,7 +9,7 @@ Use it to compare range, accuracy, update rate, interface, weight and public pri
 - `data/schema.json` — field list
 - `scripts/validate.py` — checks every row has every field and that numbers are numbers
 - `MODULES.md` — all modules as one readable table
-- `docs/index.html` — sortable, filterable table (GitHub Pages: https://tommyapi.github.io/laser-rangefinder-module-database/)
+- `docs/index.html` — sortable, filterable table (GitHub Pages: https://erditech.github.io/laser-rangefinder-module-database/)
 - `query.py` — command-line filter by range, interface, wavelength, weight, price
 
 ## Coverage
@@ -219,9 +219,9 @@ Add a row to `data/modules.json`, run `python scripts/validate.py`, and link the
 
 ## Related
 
-- [awesome-laser-rangefinder](https://github.com/Tommyapi/awesome-laser-rangefinder) — curated links: manufacturers, drivers, flight-controller integration, guides
-- [lrf-uart-protocol-decoder](https://github.com/Tommyapi/lrf-uart-protocol-decoder) — decode UART frames from several of these modules in the browser or Python
-- [drone-altimeter-laser-rangefinder-guide](https://github.com/Tommyapi/drone-altimeter-laser-rangefinder-guide) — choosing and mounting a laser altimeter on a UAV
+- [awesome-laser-rangefinder](https://github.com/ErdiTech/awesome-laser-rangefinder) — curated links: manufacturers, drivers, flight-controller integration, guides
+- [lrf-uart-protocol-decoder](https://github.com/ErdiTech/lrf-uart-protocol-decoder) — decode UART frames from several of these modules in the browser or Python
+- [drone-altimeter-laser-rangefinder-guide](https://github.com/ErdiTech/drone-altimeter-laser-rangefinder-guide) — choosing and mounting a laser altimeter on a UAV
 
 ## Support / 打赏
 

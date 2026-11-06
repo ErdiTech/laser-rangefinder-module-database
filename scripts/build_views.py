@@ -30,7 +30,7 @@ page = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <meta name="description" content="Sortable table of @N@ laser rangefinder / single-point LiDAR distance modules: range, accuracy, rate, interface, weight, public price, source URL.">
 <style>body{font:14px system-ui,sans-serif;margin:1rem}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:4px 6px;text-align:left}th{cursor:pointer;background:#f2f2f2;position:sticky;top:0}input{padding:6px;width:20rem;margin-bottom:8px}</style></head><body>
 <h1>Laser rangefinder module database</h1>
-<p>@N@ modules from 8 manufacturers. Values copied from each manufacturer public page (captured Oct-Nov 2026). Click a header to sort. <a href="https://github.com/Tommyapi/laser-rangefinder-module-database">Data and code on GitHub</a>.</p>
+<p>@N@ modules from 8 manufacturers. Values copied from each manufacturer public page (captured Oct-Nov 2026). Click a header to sort. <a href="https://github.com/ErdiTech/laser-rangefinder-module-database">Data and code on GitHub</a>.</p>
 <input id="q" placeholder="Filter (brand, model, UART, 1535...)">
 <table id="t"><thead><tr>@TH@</tr></thead><tbody>
 @TR@</tbody></table>

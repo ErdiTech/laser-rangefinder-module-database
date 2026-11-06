@@ -1,0 +1,41 @@
+{
+ "type": "object",
+ "required": [
+  "brand",
+  "model",
+  "wavelength_nm",
+  "min_range_m",
+  "max_range_m",
+  "range_condition",
+  "accuracy",
+  "rate_hz",
+  "interface",
+  "voltage",
+  "weight_g",
+  "dimensions",
+  "laser_class",
+  "price_public_usd",
+  "product_url",
+  "source_url",
+  "captured_at"
+ ],
+ "properties": {
+  "brand": {},
+  "model": {},
+  "wavelength_nm": {},
+  "min_range_m": {},
+  "max_range_m": {},
+  "range_condition": {},
+  "accuracy": {},
+  "rate_hz": {},
+  "interface": {},
+  "voltage": {},
+  "weight_g": {},
+  "dimensions": {},
+  "laser_class": {},
+  "price_public_usd": {},
+  "product_url": {},
+  "source_url": {},
+  "captured_at": {}
+ }
+}

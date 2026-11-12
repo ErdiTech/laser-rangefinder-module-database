@@ -4,9 +4,10 @@ import html, json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rows = json.load(open(os.path.join(ROOT, "data", "modules.json"), encoding="utf-8"))
-cols = ["brand", "model", "wavelength_nm", "min_range_m", "max_range_m", "accuracy", "rate_hz",
-        "interface", "weight_g", "price_public_usd"]
-hdr = ["Brand", "Model", "nm", "Min m", "Max m", "Accuracy", "Rate", "Interface", "Weight", "USD", "Source"]
+cols = ["brand", "model", "wavelength_nm", "min_range_m", "max_range_m", "max_range_special_m", "accuracy", "rate_hz",
+        "interface", "weight_g", "price_public_usd", "price_volume_usd"]
+hdr = ["Brand", "Model", "nm", "Min m", "Max m", "Special-condition max m", "Accuracy", "Rate", "Interface", "Weight",
+       "USD (1 pc)", "USD (largest tier)", "Source"]
 
 
 def c(v):
@@ -15,7 +16,7 @@ def c(v):
 
 md = ("# All modules\n\nGenerated from `data/modules.json` by `scripts/build_views.py`. Empty cell = not "
       "published by the vendor. Other fields (range condition, voltage, dimensions, laser class, capture "
-      "date) are in the JSON/CSV.\n\n| " + " | ".join(hdr) + " |\n|" + "---|" * len(hdr) + "\n")
+      "date, special-range condition, volume tier quantity) are in the JSON/CSV.\n\n| " + " | ".join(hdr) + " |\n|" + "---|" * len(hdr) + "\n")
 for r in rows:
     md += "| " + " | ".join(c(r[k]) for k in cols) + f" | [page]({r['source_url']}) |\n"
 open(os.path.join(ROOT, "MODULES.md"), "w", encoding="utf-8").write(md)

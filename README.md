@@ -41,7 +41,9 @@ Use it to compare range, accuracy, update rate, interface, weight and public pri
 | `weight_g` | Weight in grams |
 | `dimensions` | L × W × H as published |
 | `laser_class` | IEC 60825-1 class if published |
-| `price_public_usd` | Public single-unit price if the vendor publishes one; `null` if the vendor only quotes |
+| `price_public_usd` | Public single-unit price (USD) if the vendor publishes one; `null` if the vendor only quotes |
+| `price_volume_usd` | Public price at the vendor's largest published quantity tier; `null` if no tiers are published |
+| `price_volume_min_qty` | Minimum order quantity of that largest tier |
 | `product_url` / `source_url` | Where the values came from |
 | `captured_at` | Date the page was read |
 
@@ -66,67 +68,69 @@ python scripts/validate.py          # exits non-zero on a bad row
 
 ### ERDI LASER (ERDI TECH LTD)
 
+ERDI rows re-read from erdilrf.com on 2026-11-12. `max_range_m` is the standard catalog range; night-time or large-target figures are in `max_range_special_m` with their condition. Prices are USD per unit, shipping included; the volume column is the largest-quantity tier.
+
 | Model | Wavelength | Max range | Accuracy | Rate | Interface | Weight | Public price | Source |
 |---|---|---|---|---|---|---|---|---|
-| MINI-100 | 1535 nm |  |  |  |  | 2.5 g | $100 | [page](https://erdilrf.com/models/mini-100/) |
-| ER100 |  |  |  |  |  | 7.0 g | $70 | [page](https://erdilrf.com/models/er100/) |
-| ER10000 | 1535 nm |  |  |  |  | 220.0 g | $5000 | [page](https://erdilrf.com/models/er10000/) |
-| ER200 | 1535 nm |  |  |  |  | 7.0 g | $80 | [page](https://erdilrf.com/models/er200/) |
-| ER2000 | 1535 nm |  |  |  |  | 105.0 g | $1500 | [page](https://erdilrf.com/models/er2000/) |
-| ER300 | 1535 nm |  |  |  |  | 8.5 g | $100 | [page](https://erdilrf.com/models/er300/) |
-| ER400 | 1535 nm |  |  |  |  | 12.0 g | $200 | [page](https://erdilrf.com/models/er400/) |
-| ER4000 | 1535 nm |  |  |  |  | 105.0 g | $2000 | [page](https://erdilrf.com/models/er4000/) |
-| ER500 | 1535 nm |  |  |  |  | 12.0 g | $240 | [page](https://erdilrf.com/models/er500/) |
-| ER800 | 1535 nm |  |  |  |  | 18.0 g | $1050 | [page](https://erdilrf.com/models/er800/) |
-| ER8000 | 1535 nm |  |  |  |  | 220.0 g | $3000 | [page](https://erdilrf.com/models/er8000/) |
-| ER900 | 1535 nm |  |  |  |  | 18.0 g | $1050 | [page](https://erdilrf.com/models/er900/) |
-| LRF1829C | 1535 nm |  | ±2 m | 0.5Hz ~10Hz | RS422 | 400.0 g | $3500 | [page](https://erdilrf.com/models/lrf1829c/) |
-| LRF10VB | 940 nm | 9.0 m | ±5 cm (<5 m); 1% (≥5 m) | 50 Hz | UART | 1.0 g | $6 | [page](https://erdilrf.com/models/lrf10vb/) |
-| LRF22VB | 905 nm | 20.0 m | ±5 cm (<5 m); 1% (≥5 m) | 200 Hz (alternatives: 100/50/20/10/1 Hz) | UART/IIC | 1.5 g | $8 | [page](https://erdilrf.com/models/lrf22vb/) |
-| LRF50H | 905 nm | 50.0 m | ±5 cm (<10 m); 1% (≥10 m), 2σ | 20 Hz-10 kHz (default: 1 kHz) | UART | 15.0 g | $50 | [page](https://erdilrf.com/models/lrf50h/) |
-| LRF50VB | 905 nm | 50.0 m | ±5 cm (<5 m); 1% (≥5 m) | 100 Hz | UART/IIC | 1.3 g | $20 | [page](https://erdilrf.com/models/lrf50vb/) |
-| LRF100H | 905 nm | 100.0 m | ±10 cm (<10 m); 1% (≥10 m) | 20 Hz-10 kHz (default: 1 kHz) | UART, IIC | 20.0 g | $80 | [page](https://erdilrf.com/models/lrf100h/) |
-| LRF200H | 905 nm | 200.0 m | ±10 cm (<10 m); 1% (≥10 m) | 20 Hz-10 kHz (default: 1 kHz) | UART, IIC | 20.0 g | $100 | [page](https://erdilrf.com/models/lrf200h/) |
-| LRF300H | 905 nm | 300.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART, IIC | 20.0 g | $140 | [page](https://erdilrf.com/models/lrf300h/) |
-| LRF600H | 905 nm | 600.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART/IIC | 20.0 g | $160 | [page](https://erdilrf.com/models/lrf600h/) |
-| LR1000E2 | 905 nm | 1000.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) | 3–10 Hz (adaptive) | UART-TTL | 10.0 g | $30 | [page](https://erdilrf.com/models/lr1000e2/) |
-| LR1000E4 | 905 nm | 1000.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) | 3–10 Hz (adaptive) | UART-TTL | 10.0 g | $30 | [page](https://erdilrf.com/models/lr1000e4/) |
-| SPD1200N3 | 905 nm | 1000.0 m | ±0.5 m at d ≤100 m; ±(0.5 m + 0.00075d) for 100 m < d <1000 m | 2.5–15 Hz | UART, 3.3 V TTL; customizable | 6.0 g | $36 | [page](https://erdilrf.com/models/spd1200n3/) |
-| LR1000D23 | 905 nm | 1200.0 m | δ ≤ 100 cm, 5 m ≤ d < 1000 m¹) (Standard version: ±1 m) | 3 Hz – 12 Hz (customizable) | UART-TTL, customizable | 20.0 g | $110 | [page](https://erdilrf.com/models/lr1000d23/) |
-| LR1200D23 | 905 nm | 1200.0 m | δ ≤ ±1 m, 4 m ≤ d < 1000 m¹) (Standard version: ±1 m) | 2–10 Hz | UART - TTL, customizable | 20.0 g | $130 | [page](https://erdilrf.com/models/lr1200d23/) |
-| LR1200E2 | 905 nm | 1200.0 m | Both sources give ±1 m (6 m ≤ D < 500 m) and ±(0.5 m + 0.001D) for the second interval. The archived factory pack table ends the second interval at 1,000 m; the current official public PDF v1.2 lists 500 m ≤ D ≤ 1,200 m. Sources differ; confirm the applicable supplied revision. | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $35 | [page](https://erdilrf.com/models/lr1200e2/) |
-| LR1200E4 | 905 nm | 1200.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $35 | [page](https://erdilrf.com/models/lr1200e4/) |
-| LRF1200A1 | 905 nm | 1200.0 m | ±1 m (5 m ≤ L ≤ 100 m); ±(1 + 0.004L) m (L > 100 m) | 1–3 Hz | UART, 3.3 V TTL | 18.0 g | $35 | [page](https://erdilrf.com/models/lrf1200a1/) |
-| SPD1200ZG | 905 nm | 1200.0 m | ±0.5 m at d ≤100 m; ±(0.5 m + 0.0007d) for 100 m < d <1200 m | 2–10 Hz | UART-TTL; customizable | 5.0 g | $80 | [page](https://erdilrf.com/models/spd1200zg/) |
-| LR1500D23 | 905 nm | 1500.0 m | δ ≤ ±1 m, 4 m ≤ d < 1000 m¹) (Standard version: ±1 m) | 2–10 Hz | UART - TTL, customizable | 20.0 g | $140 | [page](https://erdilrf.com/models/lr1500d23/) |
-| LR1500E2 | 905 nm | 1500.0 m | Both sources give ±1 m (6 m ≤ D < 500 m) and ±(0.5 m + 0.001D) for the second interval. The archived factory pack table ends the second interval at 1,000 m; the current official public PDF v1.2 lists 500 m ≤ D ≤ 1,500 m. Sources differ; confirm the applicable supplied revision. | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $40 | [page](https://erdilrf.com/models/lr1500e2/) |
-| LR1500E4 | 905 nm | 1500.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $40 | [page](https://erdilrf.com/models/lr1500e4/) |
-| LRF1500H | 905 nm | 1500.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART/IIC | 20.0 g | $180 | [page](https://erdilrf.com/models/lrf1500h/) |
-| SPD1200N0 | 905 nm | 1500.0 m | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1200 m) | 2–15 Hz or 4–15 Hz, adaptive | UART-TTL (customizable) | 5.0 g | $35 | [page](https://erdilrf.com/models/spd1200n0/) |
-| SPD1200N2 | 905 nm | 1500.0 m | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1200 m) | 2–15 Hz or 4–15 Hz, adaptive | UART-TTL (customizable) | 5.0 g | $35 | [page](https://erdilrf.com/models/spd1200n2/) |
-| SPD1200N4 | 905 nm | 1500.0 m | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1200 m) | 2–15 Hz or 4–15 Hz, adaptive | UART-TTL (customizable) | 5.0 g | $35 | [page](https://erdilrf.com/models/spd1200n4/) |
-| SPD1200S2 | 905 nm | 1500.0 m | ±0.3m (≤400m)±0.5m + d×0.1% (400m＜d＜1200m) | 4Hz~15Hz Adaptive | UART-TTL, Customizable | 10.0 g | $150 | [page](https://erdilrf.com/models/spd1200s2/) |
-| SPD1200Z2 | 905 nm | 1500.0 m | Current published table and archived factory PDF: ±0.2 m (d≤200 m); ±0.5 m (d≤400 m); ±(0.5 m + 0.001d) (400 m<d<1,200 m). Archived factory DOCX: ±0.3 m (d≤100 m); ±(0.3 m + 0.0007d) (100 m<d<1,200 m). Sources differ; confirm the supplied configuration. d is distance in metres. | Current published table and archived factory PDF technical table: 2–20 Hz adaptive. Archived PDF overview: 2–15 Hz; its continuous-mode section gives typical 2 Hz and maximum 15 Hz. Archived factory DOCX technical table: 2–20 Hz; its continuous-mode section gives typical 2 Hz and maximum 20 Hz. Confirm the supplied mode/configuration; sources differ. | UART-TTL, Customizable | 6.0 g | $150 | [page](https://erdilrf.com/models/spd1200z2/) |
-| LR2000E2 | 905 nm | 2000.0 m | ±1 m (D ≤ 400 m); 0.4% of D (400 m < D ≤ 2000 m) | 2–10 Hz (adaptive) | UART-TTL |  | $50 | [page](https://erdilrf.com/models/lr2000e2/) |
-| LR2000E4 | 905 nm | 2000.0 m | ±1 m (D ≤ 400 m); 0.4% of D (400 m < D ≤ 2000 m) | 2–10 Hz (adaptive) | UART-TTL |  | $50 | [page](https://erdilrf.com/models/lr2000e4/) |
-| LRF0105C | 1535 nm | 3000.0 m | ±2 m | Single, 1Hz, 5Hz, 10Hz |  | 29.0 g | $300 | [page](https://erdilrf.com/models/lrf0105c/) |
-| LRF0310C | 1535 nm | 3000.0 m | ±1 m | Single, 1Hz ~10Hz |  | 32.0 g | $300 | [page](https://erdilrf.com/models/lrf0310c/) |
-| LRF3000A1 | 905 nm | 3000.0 m | ±0.7 m (D ≤ 100 m); ±(0.7 + 0.003D) m (D > 100 m) | Normal: 3–10 Hz; long-range: 1–10 Hz | UART, 3.3 V TTL | 12.0 g | $80 | [page](https://erdilrf.com/models/lrf3000a1/) |
-| LRF0305C | 1535 nm | 4000.0 m | ±1 m | 1Hz ~10Hz | UART(TTL 3.3V) | 14.0 g | $300 | [page](https://erdilrf.com/models/lrf0305c/) |
-| LRF0306C | 1535 nm | 4000.0 m | ±1 m | 1Hz ~3Hz | UART(TTL 3.3V) | 14.0 g | $300 | [page](https://erdilrf.com/models/lrf0306c/) |
-| LRF0405C | 1535 nm | 6000.0 m | +/-2 m | Single measurement or 1 to 10 Hz | UART, 3.3 V TTL level | 32.0 g | $400 | [page](https://erdilrf.com/models/lrf0405c/) |
-| LRF0609C | 1535 nm | 6000.0 m | ≤ ±2 m |  | TTL |  | $800 | [page](https://erdilrf.com/models/lrf0609c/) |
-| LRF0610C | 1535 nm | 6000.0 m | ±2 m | 0.5Hz ~10Hz | TTL: Molex 51021-0500; RS-422: J30J. Confirm the ordered version. | 90.0 g | $700 | [page](https://erdilrf.com/models/lrf0610c/) |
-| LRF0612C | 1535 nm | 6000.0 m | ±2 m | 1Hz ~10Hz |  | 58.0 g | $700 | [page](https://erdilrf.com/models/lrf0612c/) |
-| LRF0815C | 1535 nm | 8000.0 m | ±2 m | 0.5 to 10 Hz |  | 175.0 g | $900 | [page](https://erdilrf.com/models/lrf0815c/) |
-| LRF0816C | 1535 nm | 8000.0 m | ±2 m | 1Hz ~10Hz |  | 58.0 g | $1200 | [page](https://erdilrf.com/models/lrf0816c/) |
-| LRF0818C | 1535 nm | 8000.0 m | ≤ ±2 m |  | TTL |  | $900 | [page](https://erdilrf.com/models/lrf0818c/) |
-| LRF1017C |  | 10000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 275.0 g | $1300 | [page](https://erdilrf.com/models/lrf1017c/) |
-| LRF1221C |  | 12000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 275.0 g | $1300 | [page](https://erdilrf.com/models/lrf1221c/) |
-| LRF1222C |  | 12000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 335.0 g | $1300 | [page](https://erdilrf.com/models/lrf1222c/) |
-| LRF1525C |  | 15000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 400.0 g | $3000 | [page](https://erdilrf.com/models/lrf1525c/) |
-| LRF1831C | 1535 nm | 15000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 410.0 g | $3500 | [page](https://erdilrf.com/models/lrf1831c/) |
-| LRF1830C |  | 23000.0 m | ±2 m | 0.5–10 Hz | RS-422 in the specification table; TTL/RS-422 alternatives in the interface section |  | $3500 | [page](https://erdilrf.com/models/lrf1830c/) |
+| MINI-100 | 1535 nm |  |  |  |  | 2.5 g | $140 (1 pc); $100 at 1000+ pcs | [page](https://erdilrf.com/models/mini-100/) |
+| ER100 | 1535 nm |  |  |  |  | 7.0 g | $120 (1 pc); $70 at 1001+ pcs | [page](https://erdilrf.com/models/er100/) |
+| ER10000 | 1535 nm |  |  |  |  | 220.0 g | $7800 (1 pc); $5000 at 101+ pcs | [page](https://erdilrf.com/models/er10000/) |
+| ER200 | 1535 nm |  |  |  |  | 7.0 g | $140 (1 pc); $80 at 1000+ pcs | [page](https://erdilrf.com/models/er200/) |
+| ER2000 | 1535 nm |  |  |  |  | 105.0 g | $2000 (1 pc); $1500 at 201+ pcs | [page](https://erdilrf.com/models/er2000/) |
+| ER300 | 1535 nm |  |  |  |  | 8.5 g | $160 (1 pc); $100 at 1000+ pcs | [page](https://erdilrf.com/models/er300/) |
+| ER400 | 1535 nm |  |  |  |  | 12.0 g | $300 (1 pc); $200 at 501+ pcs | [page](https://erdilrf.com/models/er400/) |
+| ER4000 | 1535 nm |  |  |  |  | 105.0 g | $3000 (1 pc); $2000 at 101+ pcs | [page](https://erdilrf.com/models/er4000/) |
+| ER500 | 1535 nm |  |  |  |  | 12.0 g | $350 (1 pc); $240 at 501+ pcs | [page](https://erdilrf.com/models/er500/) |
+| ER800 | 1535 nm |  |  |  |  | 18.0 g | $1400 (1 pc); $1050 at 301+ pcs | [page](https://erdilrf.com/models/er800/) |
+| ER8000 | 1535 nm |  |  |  |  | 220.0 g | $4800 (1 pc); $3000 at 101+ pcs | [page](https://erdilrf.com/models/er8000/) |
+| ER900 | 1535 nm |  |  |  |  | 18.0 g | $1400 (1 pc); $1050 at 501+ pcs | [page](https://erdilrf.com/models/er900/) |
+| LRF10VB | 940 nm | 9.0 m | ±5 cm (<5 m); 1% (≥5 m) | 50 Hz | UART | 1.0 g | $10 (1 pc); $6 at 1000+ pcs | [page](https://erdilrf.com/models/lrf10vb/) |
+| LRF22VB | 905 nm | 20.0 m | ±5 cm (<5 m); 1% (≥5 m) | 200 Hz (alternatives: 100/50/20/10/1 Hz) | UART/IIC | 1.5 g | $12 (1 pc); $8 at 1000+ pcs | [page](https://erdilrf.com/models/lrf22vb/) |
+| LRF50H | 905 nm | 50.0 m | ±5 cm (<10 m); 1% (≥10 m), 2σ | 20 Hz-10 kHz (default: 1 kHz) | UART | 15.0 g | $100 (1 pc); $50 at 1000+ pcs | [page](https://erdilrf.com/models/lrf50h/) |
+| LRF50VB | 905 nm | 50.0 m | ±5 cm (<5 m); 1% (≥5 m) | 100 Hz | UART/IIC | 1.3 g | $70 (1 pc); $20 at 1000+ pcs | [page](https://erdilrf.com/models/lrf50vb/) |
+| LRF100H | 905 nm | 100.0 m | ±10 cm (<10 m); 1% (≥10 m) | 20 Hz-10 kHz (default: 1 kHz) | UART, IIC | 20.0 g | $200 (1 pc); $80 at 1000+ pcs | [page](https://erdilrf.com/models/lrf100h/) |
+| LRF200H | 905 nm | 200.0 m | ±10 cm (<10 m); 1% (≥10 m) | 20 Hz-10 kHz (default: 1 kHz) | UART, IIC | 20.0 g | $250 (1 pc); $100 at 999+ pcs | [page](https://erdilrf.com/models/lrf200h/) |
+| LRF300H | 905 nm | 300.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART, IIC | 20.0 g | $280 (1 pc); $140 at 501+ pcs | [page](https://erdilrf.com/models/lrf300h/) |
+| LRF600H | 905 nm | 600.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART/IIC | 20.0 g | $350 (1 pc); $160 at 501+ pcs | [page](https://erdilrf.com/models/lrf600h/) |
+| LR1000D23 | 905 nm | 1000.0 m (special condition: 1200.0 m) | δ ≤ 100 cm, 5 m ≤ d < 1000 m¹) (Standard version: ±1 m) (Target and ambient conditions not stated) | 3 Hz – 12 Hz (customizable) | UART-TTL, customizable | 20.0 g | $110 (1 pc) | [page](https://erdilrf.com/models/lr1000d23/) |
+| LR1000E2 | 905 nm | 1000.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) (Whiteboard target, 90% reflectivity: 2.3 × 2.3 m for the first distance interval; 2.3 × 4.6 m for the second.) | 3–10 Hz (adaptive) | UART-TTL | 10.0 g | $80 (1 pc); $30 at 501+ pcs | [page](https://erdilrf.com/models/lr1000e2/) |
+| LR1000E4 | 905 nm | 1000.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) (Whiteboard target, 90% reflectivity: 2.3 × 2.3 m for the first distance interval; 2.3 × 4.6 m for the second.) | 3–10 Hz (adaptive) | UART-TTL | 10.0 g | $80 (1 pc); $30 at 501+ pcs | [page](https://erdilrf.com/models/lr1000e4/) |
+| SPD1200N3 | 905 nm | 1000.0 m | ±0.5 m at d ≤100 m; ±(0.5 m + 0.00075d) for 100 m < d <1,000 m (d is distance in meters; no additional endpoint accuracy inferred) | 2.5–15 Hz | UART, 3.3 V TTL; customizable | 6.0 g | $94.5 (1 pc); $36.75 at 501+ pcs | [page](https://erdilrf.com/models/spd1200n3/) |
+| LR1200D23 | 905 nm | 1200.0 m | δ ≤ ±1 m, 4 m ≤ d < 1000 m¹) (Standard version: ±1 m) (Target and ambient conditions not stated) | 2–10 Hz | UART - TTL, customizable | 20.0 g | $130 (1 pc) | [page](https://erdilrf.com/models/lr1200d23/) |
+| LR1200E2 | 905 nm | 1200.0 m | ±1 m (6 m ≤ D < 500 m); ±(0.5 m + 0.001D) (500 m ≤ D ≤ 1,200 m) (Whiteboard target, 90% reflectivity: 2.3 × 2.3 m for the first distance interval; 2.3 × 4.6 m for the second.) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/lr1200e2/) |
+| LR1200E4 | 905 nm | 1200.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) (Target and ambient conditions not stated) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/lr1200e4/) |
+| LRF1200A1 | 905 nm | 1200.0 m | ±1 m (5 m ≤ L ≤ 100 m); ±(1 + 0.004L) m (L > 100 m) (L is distance in meters.) | 1–3 Hz | UART, 3.3 V TTL | 18.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/lrf1200a1/) |
+| SPD1200N0 | 905 nm | 1200.0 m (special condition: 1500.0 m) | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1,200 m) (SPD1200N0 controlled source technical table) | 2–15 Hz or 4–15 Hz, adaptive (SPD1200N0 controlled source technical table; both alternatives appear in the same formal source row) | UART-TTL (customizable) | 5.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/spd1200n0/) |
+| SPD1200N2 | 905 nm | 1200.0 m (special condition: 1500.0 m) | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1,200 m) (SPD1200N2 controlled source technical table) | 2–15 Hz or 4–15 Hz, adaptive | UART-TTL (customizable) | 5.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/spd1200n2/) |
+| SPD1200N4 | 905 nm | 1200.0 m (special condition: 1500.0 m) | ±0.3 m (D ≤100 m); ±0.3 m + D × 0.7‰ (100 m < D <1,200 m) (SPD1200N4 controlled source technical table) | 2–15 Hz or 4–15 Hz, adaptive (SPD1200N4 controlled source technical table; both alternatives appear in the same formal source row) | UART-TTL (customizable) | 5.0 g | $90 (1 pc); $35 at 501+ pcs | [page](https://erdilrf.com/models/spd1200n4/) |
+| SPD1200S2 | 905 nm | 1200.0 m (special condition: 1500.0 m) | ±0.3m (≤400m)±0.5m + d × 0.1% (400m＜d＜1,200m) | 4Hz~15Hz Adaptive | UART-TTL, Customizable | 10.0 g | $150 (1 pc) | [page](https://erdilrf.com/models/spd1200s2/) |
+| SPD1200Z2 | 905 nm | 1200.0 m (special condition: 1500.0 m) | ±0.2 m (d ≤ 200 m); ±0.5 m (d ≤ 400 m); ±(0.5 m + 0.001d) (400 m < d < 1,200 m); d is distance in metres | 2–20 Hz adaptive | UART-TTL, Customizable | 6.0 g | $150 (1 pc) | [page](https://erdilrf.com/models/spd1200z2/) |
+| SPD1200ZG | 905 nm | 1200.0 m | ±0.5 m at d ≤100 m; ±(0.5 m + 0.0007d) for 100 m < d <1,200 m (—) | 2–10 Hz | UART-TTL; customizable | 5.0 g | $200 (1 pc); $80 at 501+ pcs | [page](https://erdilrf.com/models/spd1200zg/) |
+| LR1500D23 | 905 nm | 1500.0 m | δ ≤ ±1 m, 4 m ≤ d < 1000 m¹) (Standard version: ±1 m) (Target and ambient conditions not stated) | 2–10 Hz | UART - TTL, customizable | 20.0 g | $140 (1 pc) | [page](https://erdilrf.com/models/lr1500d23/) |
+| LR1500E2 | 905 nm | 1500.0 m | ±1 m (6 m ≤ D < 500 m); ±(0.5 m + 0.001D) (500 m ≤ D ≤ 1,500 m) (Whiteboard target, 90% reflectivity: 2.3 × 2.3 m for the first distance interval; 2.3 × 4.6 m for the second.) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $100 (1 pc); $40 at 501+ pcs | [page](https://erdilrf.com/models/lr1500e2/) |
+| LR1500E4 | 905 nm | 1500.0 m | ±1 m (D ≤ 400 m); ±(1 + 0.001D) m (D > 400 m) (Whiteboard target, 90% reflectivity: 2.3 × 2.3 m for the first distance interval; 2.3 × 4.6 m for the second.) | 2–10 Hz (adaptive) | UART-TTL | 10.0 g | $100 (1 pc); $40 at 501+ pcs | [page](https://erdilrf.com/models/lr1500e4/) |
+| LRF1500H | 905 nm | 1500.0 m | ±10 cm (<10 m); 1% (≥10 m) | 1 kHz or 50 Hz (automatically switched to match reflected-signal intensity) | UART/IIC | 20.0 g | $400 (1 pc); $180 at 501+ pcs | [page](https://erdilrf.com/models/lrf1500h/) |
+| LR2000E2 | 905 nm | 2000.0 m | ±1 m (D ≤ 400 m); 0.4% of D (400 m < D ≤ 2,000 m) (Target and ambient conditions not stated) | 2–10 Hz (adaptive) | UART-TTL |  | $120 (1 pc); $50 at 501+ pcs | [page](https://erdilrf.com/models/lr2000e2/) |
+| LR2000E4 | 905 nm | 2000.0 m | ±1 m (D ≤ 400 m); 0.4% of D (400 m < D ≤ 2,000 m) (Target and ambient conditions not stated) | 2–10 Hz (adaptive) | UART-TTL |  | $120 (1 pc); $50 at 501+ pcs | [page](https://erdilrf.com/models/lr2000e4/) |
+| LRF0105C | 1535 nm | 3000.0 m | ±2 m | Single, 1Hz, 5Hz, 10Hz |  | 29.0 g | $500 (1 pc); $300 at 500+ pcs | [page](https://erdilrf.com/models/lrf0105c/) |
+| LRF0310C | 1535 nm | 3000.0 m | ±1 m | Single, 1Hz ~10Hz |  | 32.0 g | $500 (1 pc); $300 at 500+ pcs | [page](https://erdilrf.com/models/lrf0310c/) |
+| LRF3000A1 | 905 nm | 3000.0 m | ±0.7 m (D ≤ 100 m); ±(0.7 + 0.003D) m (D > 100 m) (Building target; D is distance in meters.) | Normal: 3–10 Hz; long-range: 1–10 Hz | UART, 3.3 V TTL | 12.0 g | $200 (1 pc); $80 at 501+ pcs | [page](https://erdilrf.com/models/lrf3000a1/) |
+| LRF0405C | 1535 nm | 4000.0 m | +/-2 m | Single measurement or 1 to 10 Hz | UART, 3.3 V TTL level | 32.0 g | $650 (1 pc); $400 at 500+ pcs | [page](https://erdilrf.com/models/lrf0405c/) |
+| LRF0305C | 1535 nm | 4000.0 m | ±1 m | 1Hz ~10Hz | UART(TTL 3.3V) | 14.0 g | $500 (1 pc); $300 at 500+ pcs | [page](https://erdilrf.com/models/lrf0305c/) |
+| LRF0306C | 1535 nm | 4000.0 m | ±1 m | 1Hz ~3Hz | UART(TTL 3.3V) | 14.0 g | $500 (1 pc); $300 at 500+ pcs | [page](https://erdilrf.com/models/lrf0306c/) |
+| LRF0609C | 1535 nm | 6000.0 m | ≤ ±2 m |  | TTL | 62.0 g | $1600 (1 pc); $800 at 1001+ pcs | [page](https://erdilrf.com/models/lrf0609c/) |
+| LRF0610C | 1535 nm | 6000.0 m | ±2 m | 0.5Hz ~10Hz | TTL: Molex 51021-0500; RS-422: J30J. Confirm the ordered version. | 90.0 g | $1000 (1 pc); $700 at 500+ pcs | [page](https://erdilrf.com/models/lrf0610c/) |
+| LRF0612C | 1535 nm | 6000.0 m | ±2 m | 1Hz ~10Hz |  | 58.0 g | $1000 (1 pc); $700 at 500+ pcs | [page](https://erdilrf.com/models/lrf0612c/) |
+| LRF1831C | 1535 nm | 6500.0 m (special condition: 12000.0 m) | ±2 m | 0.5Hz ~10Hz | RS422 | 410.0 g | $7000 (1 pc); $3500 at 501+ pcs | [page](https://erdilrf.com/models/lrf1831c/) |
+| LRF0815C | 1535 nm | 8000.0 m | ±2 m | 0.5 to 10 Hz | RS-422; TTL optional | 175.0 g | $1500 (1 pc); $900 at 1001+ pcs | [page](https://erdilrf.com/models/lrf0815c/) |
+| LRF0816C | 1535 nm | 8000.0 m | ±2 m | 1Hz ~10Hz |  | 58.0 g | $1500 (1 pc); $1200 at 201+ pcs | [page](https://erdilrf.com/models/lrf0816c/) |
+| LRF0818C | 1535 nm | 8000.0 m | ≤ ±2 m |  | TTL | 65.0 g | $2000 (1 pc); $900 at 1001+ pcs | [page](https://erdilrf.com/models/lrf0818c/) |
+| LRF1017C | 1535 nm | 10000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 275.0 g | $3000 (1 pc); $1300 at 501+ pcs | [page](https://erdilrf.com/models/lrf1017c/) |
+| LRF1221C | 1535 nm | 12000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 275.0 g | $3400 (1 pc); $1300 at 501+ pcs | [page](https://erdilrf.com/models/lrf1221c/) |
+| LRF1222C | 1535 nm | 12000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 335.0 g | $3400 (1 pc); $1300 at 501+ pcs | [page](https://erdilrf.com/models/lrf1222c/) |
+| LRF1525C | 1535 nm | 15000.0 m | ±2 m | 0.5Hz ~10Hz | RS422 | 400.0 g | $6000 (1 pc); $3000 at 501+ pcs | [page](https://erdilrf.com/models/lrf1525c/) |
+| LRF1829C | 1535 nm | 18000.0 m (special condition: 23000.0 m) | ±2 m | 0.5Hz ~10Hz | RS422 | 400.0 g | $7000 (1 pc); $3500 at 501+ pcs | [page](https://erdilrf.com/models/lrf1829c/) |
+| LRF1830C | 1535 nm | 18000.0 m (special condition: 23000.0 m) | ±2 m | 0.5–10 Hz | RS-422 in the specification table; TTL/RS-422 alternatives in the interface section | 400.0 g | $7000 (1 pc); $3500 at 501+ pcs | [page](https://erdilrf.com/models/lrf1830c/) |
 
 ### Benewake
 

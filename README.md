@@ -229,23 +229,6 @@ Add a row to `data/modules.json`, run `python scripts/validate.py`, and link the
 - [lrf-uart-protocol-decoder](https://github.com/ErdiTech/lrf-uart-protocol-decoder) — decode UART frames from several of these modules in the browser or Python
 - [drone-altimeter-laser-rangefinder-guide](https://github.com/ErdiTech/drone-altimeter-laser-rangefinder-guide) — choosing and mounting a laser altimeter on a UAV
 
-## Support / 打赏
-
-If this project saved you time, you can buy the author a coffee in crypto. Thank you!
-如果这个项目帮到了你，欢迎用加密货币打赏支持，谢谢！
-
-| Network | Asset | Address |
-|---|---|---|
-| TRON (TRC20) | USDT | `TNGdTwE6opH6rmUyoG1JUR7FSyEb4k273R` |
-| Ethereum / BNB Chain / Polygon | USDT | `0x59c43144a862b351fa1086ae842d1327c9d91613` |
-| Ethereum / Arbitrum / Base | ETH | `0x59c43144a862b351fa1086ae842d1327c9d91613` |
-| Bitcoin | BTC | `1RS6tWXHregLfEsiPzVUCUBuhgDg5uTSV` |
-| Solana | USDT | `HZguEXfTtLChNdJTxAYCbcGscaqikz8JYrEpUhEyeVd9` |
-
-Please send only the listed asset on the listed network — other tokens or networks may be lost.
-请按表中对应的网络转对应的币种，转错币种或网络可能无法找回。
-
-
 ## License
 
 MIT — see [LICENSE](LICENSE). Spec values remain the property of their manufacturers; this repository only collects published figures with their source.

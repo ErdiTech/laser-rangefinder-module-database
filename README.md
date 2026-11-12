@@ -1,5 +1,7 @@
 # Laser rangefinder module database
 
+Datasheets and public prices for every module are in the [ERDI laser rangefinder model list](https://erdilrf.com/models/?utm_source=github&utm_medium=readme&utm_campaign=laser-rangefinder-module-database).
+
 An open, machine-readable dataset of **single-point laser rangefinder / LiDAR distance modules** (UART, I2C, CAN, analog) used in drones, robots, industrial measurement and IoT. 109 modules from 8 manufacturers, every value copied from the manufacturer's own public page and stamped with the capture date.
 
 Use it to compare range, accuracy, update rate, interface, weight and public price across brands without opening fifty datasheets.

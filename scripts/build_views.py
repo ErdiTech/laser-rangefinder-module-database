@@ -415,7 +415,7 @@ GUIDES = [
     {"slug": "can-bus-rangefinder-modules", "title": "Laser rangefinder modules with a published CAN interface",
      "short": "CAN interface modules",
      "rule": "category is rangefinder module, published interface includes CAN, published max range is present, "
-             "and status is not discontinued; unknown status remains unknown",
+             "and status is not discontinued",
      "filter": lambda r: r["category"] == "rangefinder module" and "CAN" in iface_tags(r)
      and r["status"] != "discontinued",
      "sort": lambda r: (short_brand(r["brand"]).lower(), r["model"]),
@@ -426,11 +426,11 @@ GUIDES = [
                "Keep each range beside its manufacturer's target condition. The table is ordered by manufacturer "
                "and model, not by an inferred performance ranking.",
                "Empty fields retain the dataset's null meaning: no published value is recorded. Check the linked "
-               "source and capture date for availability and current specifications. Request price."]},
+               "source and capture date for availability and current specifications. Request prices from each maker; this page does not list them."]},
     {"slug": "i2c-rangefinder-modules", "title": "Laser rangefinder modules with a published I2C interface",
      "short": "I2C interface modules",
      "rule": "category is rangefinder module, published interface includes I2C, IIC or I²C, published max range "
-             "is present, and status is not discontinued; unknown status remains unknown",
+             "is present, and status is not discontinued",
      "filter": lambda r: r["category"] == "rangefinder module" and "I2C" in iface_tags(r)
      and r["status"] != "discontinued",
      "sort": lambda r: (short_brand(r["brand"]).lower(), r["model"]),
@@ -440,7 +440,7 @@ GUIDES = [
                "The interface filter includes modules intended for different media and target conditions. "
                "Read the range condition before comparing rows; an underwater specification is not an air rating.",
                "A listed driver names a particular model; an empty driver field is not proof that no driver "
-               "exists. No electrical limits, range values or compatibility claims have been inferred. Request price."]},
+               "exists. No electrical limits, range values or compatibility claims have been inferred. Request prices from each maker; this page does not list them."]},
     {"slug": "drone-altimeter-1km", "title": "Laser rangefinder modules for a 1 km drone altimeter",
      "short": "drone altimeter, 1 km",
      "rule": "published max range ≥ 1,000 m, published weight ≤ 60 g, and a UART, I2C or CAN interface "
@@ -526,7 +526,9 @@ def build_guides():
             t2, f2 = g["second"]
             rows2 = sorted([r for r in RANGE_ROWS if f2(r)], key=lambda r: (r["price_public_usd"], -r["max_range_m"]))
             body += [f"<h2>{E(t2)} ({len(rows2)})</h2>", table(rows2)]
-        desc = f"{len(rows)} modules matching: {g['rule']}. Manufacturer-sourced specs, prices and source links."
+        shows_price = "usd" in (g.get("cols") or [c[0] for c in COLS])
+        desc = (f"{len(rows)} modules matching: {g['rule']}. Manufacturer-sourced specs, "
+                + ("prices and source links." if shows_price else "range conditions and source links."))
         page(rel, g["title"], desc[:300], "\n".join(body),
              [itemlist(g["title"], rows, SITE + rel), crumbs([("Database", ""), ("Guides", "guides/"), (g["short"], rel)])])
         links.append((g, len(rows)))

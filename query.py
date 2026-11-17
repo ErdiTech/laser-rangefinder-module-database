@@ -8,8 +8,8 @@ Examples:
 import argparse, csv, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FIELDS = ["brand", "model", "wavelength_nm", "min_range_m", "max_range_m", "rate_hz",
-          "interface", "weight_g", "price_public_usd", "product_url"]
+FIELDS = ["brand", "model", "category", "wavelength_nm", "min_range_m", "max_range_m", "range_condition", "rate_hz",
+          "interface", "weight_g", "price_public_usd", "product_url", "source_url"]
 
 
 def load(path=None):
@@ -28,7 +28,7 @@ def grams(v):
 
 
 def select(rows, min_range=None, max_range=None, interface=None, wavelength=None,
-           brand=None, max_weight=None, max_price=None):
+           brand=None, max_weight=None, max_price=None, has_driver=None, category=None):
     out = []
     for r in rows:
         if min_range is not None and (r.get("max_range_m") is None or r["max_range_m"] < min_range):
@@ -47,6 +47,10 @@ def select(rows, min_range=None, max_range=None, interface=None, wavelength=None
                 continue
         if max_price is not None and (r.get("price_public_usd") is None or r["price_public_usd"] > max_price):
             continue
+        if has_driver and not r.get("open_source_drivers"):
+            continue
+        if category and r.get("category") != category:
+            continue
         out.append(r)
     return out
 
@@ -60,10 +64,12 @@ def main(argv=None):
     p.add_argument("--brand")
     p.add_argument("--max-weight", type=float, help="grams")
     p.add_argument("--max-price", type=float, help="public USD price")
+    p.add_argument("--has-driver", action="store_true", help="only modules with an open-source driver naming them")
+    p.add_argument("--category", choices=["rangefinder module", "scanning rangefinder", "laser source (component)"])
     p.add_argument("--format", choices=["table", "json", "csv"], default="table")
     a = p.parse_args(argv)
     rows = select(load(), a.min_range, a.max_range, a.interface, a.wavelength,
-                  a.brand, a.max_weight, a.max_price)
+                  a.brand, a.max_weight, a.max_price, a.has_driver, a.category)
     rows.sort(key=lambda r: (r.get("max_range_m") is None, r.get("max_range_m") or 0))
     if a.format == "json":
         json.dump(rows, sys.stdout, ensure_ascii=False, indent=1)

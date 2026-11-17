@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://erditech.github.io/laser-rangefinder-module-database/sitemap.xml

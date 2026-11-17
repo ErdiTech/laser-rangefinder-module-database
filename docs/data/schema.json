@@ -1,0 +1,213 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://erditech.github.io/laser-rangefinder-module-database/data/schema.json",
+ "title": "Laser rangefinder module",
+ "type": "object",
+ "required": [
+  "brand",
+  "model",
+  "category",
+  "wavelength_nm",
+  "min_range_m",
+  "max_range_m",
+  "range_condition",
+  "max_range_special_m",
+  "max_range_special_condition",
+  "accuracy",
+  "rate_hz",
+  "interface",
+  "voltage",
+  "weight_g",
+  "dimensions",
+  "laser_class",
+  "price_public_usd",
+  "price_volume_usd",
+  "price_volume_min_qty",
+  "open_source_drivers",
+  "status",
+  "product_url",
+  "source_url",
+  "captured_at"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "brand": {
+   "type": "string",
+   "description": "Manufacturer as written on its own site"
+  },
+  "model": {
+   "type": "string",
+   "description": "Model name as written by the manufacturer"
+  },
+  "category": {
+   "enum": [
+    "rangefinder module",
+    "scanning rangefinder",
+    "laser source (component)"
+   ],
+   "description": "rangefinder module = single-point distance module with a range spec; scanning rangefinder = single-beam sensor with a built-in scan mechanism; laser source (component) = pulsed laser emitter sold for building rangefinders (no range spec)"
+  },
+  "wavelength_nm": {
+   "type": [
+    "integer",
+    "null"
+   ],
+   "description": "Laser wavelength in nanometres as published (850/905/940 = silicon-detector class, 1535/1550 = eye-safe InGaAs class)"
+  },
+  "min_range_m": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "Published minimum range (metres)"
+  },
+  "max_range_m": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "Published headline maximum range under range_condition (metres)"
+  },
+  "range_condition": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Target, reflectance and visibility the max range is quoted for"
+  },
+  "max_range_special_m": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "A higher published range under a special condition (metres)"
+  },
+  "max_range_special_condition": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Condition for max_range_special_m"
+  },
+  "accuracy": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Published accuracy, verbatim"
+  },
+  "rate_hz": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Published measurement/output rate, verbatim"
+  },
+  "interface": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Electrical interfaces listed by the manufacturer"
+  },
+  "voltage": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Supply voltage as published"
+  },
+  "weight_g": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "Weight (grams)"
+  },
+  "dimensions": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Dimensions as published"
+  },
+  "laser_class": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "IEC 60825-1 laser class if published"
+  },
+  "price_public_usd": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "Public single-unit price on the manufacturer's own site (USD)"
+  },
+  "price_volume_usd": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "description": "Public price at the largest published quantity tier (USD)"
+  },
+  "price_volume_min_qty": {
+   "type": [
+    "integer",
+    "null"
+   ],
+   "description": "Minimum quantity of that tier"
+  },
+  "open_source_drivers": {
+   "type": "array",
+   "description": "Open-source drivers that name this model (manufacturer repos, ArduPilot AP_RangeFinder documentation)",
+   "items": {
+    "type": "object",
+    "required": [
+     "name",
+     "url"
+    ],
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "url": {
+      "type": "string",
+      "format": "uri"
+     }
+    }
+   }
+  },
+  "status": {
+   "enum": [
+    "active",
+    "discontinued",
+    "unknown"
+   ],
+   "description": "Sales status as shown on the source page"
+  },
+  "product_url": {
+   "type": "string",
+   "format": "uri",
+   "description": "Manufacturer product page"
+  },
+  "source_url": {
+   "type": "string",
+   "format": "uri",
+   "description": "Manufacturer page or datasheet the values were copied from"
+  },
+  "captured_at": {
+   "type": "string",
+   "format": "date",
+   "description": "Date the source was read (YYYY-MM-DD)"
+  },
+  "notes": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "Free-text caveats, e.g. source inconsistencies"
+  }
+ }
+}

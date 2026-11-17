@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it with the data date shown in the README."
+title: "Laser rangefinder module database"
+abstract: "Open, manufacturer-sourced dataset of single-point laser rangefinder / LiDAR distance modules: wavelength, range with target condition, accuracy, update rate, interface, weight, public price, open-source drivers, source URL and capture date for each row."
+type: dataset
+authors:
+  - name: "ERDI TECH LTD"
+    website: "https://erdilrf.com/"
+repository-code: "https://github.com/ErdiTech/laser-rangefinder-module-database"
+url: "https://erditech.github.io/laser-rangefinder-module-database/"
+license: MIT
+version: "0.3.0"
+date-released: "2026-11-17"
+keywords:
+  - laser rangefinder module
+  - LiDAR
+  - distance sensor
+  - "905 nm"
+  - "1535 nm"
+  - drone altimeter
+  - dataset

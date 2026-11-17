@@ -184,7 +184,7 @@ COLS = [  # key, header, renderer, numeric?
 ]
 
 
-def table(rows, cols=None, self_row=None, extra=None, sortable=False):
+def table(rows, cols=None, self_row=None, extra=None, sortable=False, full_conditions=False):
     cols = cols or [c[0] for c in COLS]
     spec = [c for c in COLS if c[0] in cols]
     th = "".join(f'<th data-k="{k}">{h}</th>' if sortable else f"<th>{h}</th>" for k, h, _, _ in spec)
@@ -199,7 +199,8 @@ def table(rows, cols=None, self_row=None, extra=None, sortable=False):
                      f'data-drv="{1 if has_driver(r) else 0}" data-cat="{E(r["category"])}" '
                      f'data-status="{r["status"]}"')
         cls = ' class="self"' if r is self_row else ""
-        tds = "".join(f'<td{" class=n" if num else ""}>{fn(r)}</td>' for k, _, fn, num in spec)
+        tds = "".join(f'<td{" class=n" if num else ""}>{E(cell(r["range_condition"])) if k == "cond" and full_conditions else fn(r)}</td>'
+                      for k, _, fn, num in spec)
         if extra:
             tds += f"<td>{extra[1](r)}</td>"
         out.append(f"<tr{cls}{attrs}>{tds}</tr>")
@@ -411,6 +412,35 @@ def under(v, lim):
 
 
 GUIDES = [
+    {"slug": "can-bus-rangefinder-modules", "title": "Laser rangefinder modules with a published CAN interface",
+     "short": "CAN interface modules",
+     "rule": "category is rangefinder module, published interface includes CAN, published max range is present, "
+             "and status is not discontinued; unknown status remains unknown",
+     "filter": lambda r: r["category"] == "rangefinder module" and "CAN" in iface_tags(r)
+     and r["status"] != "discontinued",
+     "sort": lambda r: (short_brand(r["brand"]).lower(), r["model"]),
+     "cols": [c[0] for c in COLS if c[0] != "usd"],
+     "notes": ["CAN in the interface field is a shortlist criterion, not a claim that two modules share a "
+               "message format, connector or application protocol. Confirm the exact interface variant, bitrate, "
+               "pinout, termination and protocol document before integration.",
+               "Keep each range beside its manufacturer's target condition. The table is ordered by manufacturer "
+               "and model, not by an inferred performance ranking.",
+               "Empty fields retain the dataset's null meaning: no published value is recorded. Check the linked "
+               "source and capture date for availability and current specifications. Request price."]},
+    {"slug": "i2c-rangefinder-modules", "title": "Laser rangefinder modules with a published I2C interface",
+     "short": "I2C interface modules",
+     "rule": "category is rangefinder module, published interface includes I2C, IIC or I²C, published max range "
+             "is present, and status is not discontinued; unknown status remains unknown",
+     "filter": lambda r: r["category"] == "rangefinder module" and "I2C" in iface_tags(r)
+     and r["status"] != "discontinued",
+     "sort": lambda r: (short_brand(r["brand"]).lower(), r["model"]),
+     "cols": [c[0] for c in COLS if c[0] != "usd"],
+     "notes": ["I2C labels do not establish plug compatibility. Confirm supply and logic voltage separately, "
+               "address selection, pull-up requirements, register map and the exact ordered interface variant.",
+               "The interface filter includes modules intended for different media and target conditions. "
+               "Read the range condition before comparing rows; an underwater specification is not an air rating.",
+               "A listed driver names a particular model; an empty driver field is not proof that no driver "
+               "exists. No electrical limits, range values or compatibility claims have been inferred. Request price."]},
     {"slug": "drone-altimeter-1km", "title": "Laser rangefinder modules for a 1 km drone altimeter",
      "short": "drone altimeter, 1 km",
      "rule": "published max range ≥ 1,000 m, published weight ≤ 60 g, and a UART, I2C or CAN interface "
@@ -490,7 +520,8 @@ def build_guides():
                 "manufacturer page the values were copied from.</p>")
         body = [nav(), f"<h1>{E(g['title'])}</h1>", lead,
                 "<h2>What to check</h2><ul>" + "".join(f"<li>{E(n)}</li>" for n in g["notes"]) + "</ul>",
-                f"<h2>Matching modules ({len(rows)})</h2>", table(rows)]
+                f"<h2>Matching modules ({len(rows)})</h2>",
+                table(rows, cols=g.get("cols"), full_conditions=bool(g.get("cols")))]
         if g.get("second"):
             t2, f2 = g["second"]
             rows2 = sorted([r for r in RANGE_ROWS if f2(r)], key=lambda r: (r["price_public_usd"], -r["max_range_m"]))

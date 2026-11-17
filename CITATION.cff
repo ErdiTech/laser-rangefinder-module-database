@@ -9,6 +9,14 @@ authors:
 repository-code: "https://github.com/ErdiTech/laser-rangefinder-module-database"
 url: "https://erditech.github.io/laser-rangefinder-module-database/"
 license: MIT
+doi: "10.5281/zenodo.24125641"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24303586"
+    description: "Version 0.3.0 archived on Zenodo"
+  - type: url
+    value: "https://huggingface.co/datasets/erdilrf/laser-rangefinder-module-database"
+    description: "Mirror on Hugging Face"
 version: "0.3.0"
 date-released: "2026-11-17"
 keywords:

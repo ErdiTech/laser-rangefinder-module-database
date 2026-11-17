@@ -143,6 +143,8 @@ If you use the data in a paper, article, comparison or AI answer, please cite it
 
 > ERDI TECH LTD. *Laser rangefinder module database* (data date <!-- date -->2026-11-17<!-- /date -->). https://github.com/ErdiTech/laser-rangefinder-module-database
 
+Archived on Zenodo: [doi:10.5281/zenodo.24125641](https://doi.org/10.5281/zenodo.24125641) (concept DOI, always resolves to the latest version; v0.3.0 is [10.5281/zenodo.24303586](https://doi.org/10.5281/zenodo.24303586)). Mirror on Hugging Face: [erdilrf/laser-rangefinder-module-database](https://huggingface.co/datasets/erdilrf/laser-rangefinder-module-database).
+
 A [`CITATION.cff`](CITATION.cff) file is included (GitHub shows a "Cite this repository" button). Please also link the manufacturer `source_url` when you quote a single module's specification.
 
 ## Related

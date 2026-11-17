@@ -5,7 +5,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "modules.json")
-SITE = "https://erditech.github.io/laser-rangefinder-module-database/"
+SITE = "https://erditech.com/laser-rangefinder-module-database/"
 REPO = "https://github.com/ErdiTech/laser-rangefinder-module-database"
 
 CATEGORIES = ("rangefinder module", "scanning rangefinder", "laser source (component)")

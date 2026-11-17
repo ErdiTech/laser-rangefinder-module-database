@@ -1,6 +1,6 @@
 # All modules (179 rows, data date 2026-11-17)
 
-Generated from `data/modules.json` by `scripts/build_views.py`. Empty cell = not published by the manufacturer. Range conditions, voltage, dimensions, laser class, volume prices and capture dates are in the JSON/CSV. Interactive version: https://erditech.github.io/laser-rangefinder-module-database/
+Generated from `data/modules.json` by `scripts/build_views.py`. Empty cell = not published by the manufacturer. Range conditions, voltage, dimensions, laser class, volume prices and capture dates are in the JSON/CSV. Interactive version: https://erditech.com/laser-rangefinder-module-database/
 
 | Brand | Model | Type | nm | Min m | Max m | Accuracy | Rate | Interface | Weight g | USD (1 pc) | Open-source driver | Source |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|

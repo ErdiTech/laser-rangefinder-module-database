@@ -1,6 +1,6 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "https://erditech.github.io/laser-rangefinder-module-database/data/schema.json",
+ "$id": "https://erditech.com/laser-rangefinder-module-database/data/schema.json",
  "title": "Laser rangefinder module",
  "type": "object",
  "required": [

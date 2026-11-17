@@ -2,12 +2,12 @@
 
 An open, manufacturer-sourced dataset for choosing a **laser rangefinder module / single-point LiDAR**: range together with the target condition it is quoted for, wavelength (905 / 1535 nm), accuracy, update rate, interface (UART, I2C, CAN, RS-422), weight, public price and open-source drivers, with the source link and capture date on every row.
 
-**[Open the sortable, filterable table](https://erditech.github.io/laser-rangefinder-module-database/)** · <!-- nmod -->165<!-- /nmod --> rangefinder modules (<!-- count -->179<!-- /count --> rows incl. scanning units and laser sources) · data updated <!-- date -->2026-11-17<!-- /date --> · [CSV](data/modules.csv) · [JSON](data/modules.json) · [add a module](#add-or-correct-a-module)
+**[Open the sortable, filterable table](https://erditech.com/laser-rangefinder-module-database/)** · <!-- nmod -->165<!-- /nmod --> rangefinder modules (<!-- count -->179<!-- /count --> rows incl. scanning units and laser sources) · data updated <!-- date -->2026-11-17<!-- /date --> · [CSV](data/modules.csv) · [JSON](data/modules.json) · [add a module](#add-or-correct-a-module)
 
 Maintained by ERDI TECH LTD ([erdilrf.com](https://erdilrf.com/)), which also makes some of the listed modules. Every manufacturer's rows follow the same rules: values copied from the maker's own page or datasheet, nothing estimated, `null` when the maker does not publish a value.
 
 <!-- stats:start -->
-**179 rows from 12 manufacturers** (165 rangefinder modules, 2 scanning rangefinders, 12 laser-source components) · data date **2026-11-17** · [open the sortable table](https://erditech.github.io/laser-rangefinder-module-database/)
+**179 rows from 12 manufacturers** (165 rangefinder modules, 2 scanning rangefinders, 12 laser-source components) · data date **2026-11-17** · [open the sortable table](https://erditech.com/laser-rangefinder-module-database/)
 
 | Manufacturer | Rows |
 |---|---|
@@ -31,15 +31,15 @@ Static HTML pages generated from the data (no JavaScript needed, JSON-LD include
 
 | Question | Page |
 |---|---|
-| Which modules can work as a 1 km drone altimeter? | [drone altimeter, 1 km](https://erditech.github.io/laser-rangefinder-module-database/guides/drone-altimeter-1km/) |
-| Which modules are eye-safe 1535 / 1550 nm? | [eye-safe 1535 nm](https://erditech.github.io/laser-rangefinder-module-database/guides/eye-safe-1535nm/) |
-| What reaches more than 2 km? | [long range over 2 km](https://erditech.github.io/laser-rangefinder-module-database/guides/long-range-over-2km/) |
-| What costs under $50? | [under $50](https://erditech.github.io/laser-rangefinder-module-database/guides/under-50-usd/) |
-| Which modules have an open-source ROS 2 / Arduino / ArduPilot driver? | [open-source drivers](https://erditech.github.io/laser-rangefinder-module-database/guides/open-source-driver-ros2-arduino/) |
-| 905 nm or 1535 nm, and who sells each? | [905 vs 1535 nm](https://erditech.github.io/laser-rangefinder-module-database/compare/905nm-vs-1535nm/) |
-| What is comparable to TFmini-S, TF-Luna, TF02-Pro, TF03, SF11/C, SF30/D, LW20/C, LIDAR-Lite v3HP, TeraRanger Evo...? | [alternatives pages](https://erditech.github.io/laser-rangefinder-module-database/alternatives/) |
+| Which modules can work as a 1 km drone altimeter? | [drone altimeter, 1 km](https://erditech.com/laser-rangefinder-module-database/guides/drone-altimeter-1km/) |
+| Which modules are eye-safe 1535 / 1550 nm? | [eye-safe 1535 nm](https://erditech.com/laser-rangefinder-module-database/guides/eye-safe-1535nm/) |
+| What reaches more than 2 km? | [long range over 2 km](https://erditech.com/laser-rangefinder-module-database/guides/long-range-over-2km/) |
+| What costs under $50? | [under $50](https://erditech.com/laser-rangefinder-module-database/guides/under-50-usd/) |
+| Which modules have an open-source ROS 2 / Arduino / ArduPilot driver? | [open-source drivers](https://erditech.com/laser-rangefinder-module-database/guides/open-source-driver-ros2-arduino/) |
+| 905 nm or 1535 nm, and who sells each? | [905 vs 1535 nm](https://erditech.com/laser-rangefinder-module-database/compare/905nm-vs-1535nm/) |
+| What is comparable to TFmini-S, TF-Luna, TF02-Pro, TF03, SF11/C, SF30/D, LW20/C, LIDAR-Lite v3HP, TeraRanger Evo...? | [alternatives pages](https://erditech.com/laser-rangefinder-module-database/alternatives/) |
 
-Every page states the filter rule it uses, so the selection can be reproduced from the CSV. Machine-readable index for crawlers and LLM tools: [`llms.txt`](https://erditech.github.io/laser-rangefinder-module-database/llms.txt), [`sitemap.xml`](https://erditech.github.io/laser-rangefinder-module-database/sitemap.xml).
+Every page states the filter rule it uses, so the selection can be reproduced from the CSV. Machine-readable index for crawlers and LLM tools: [`llms.txt`](https://erditech.com/laser-rangefinder-module-database/llms.txt), [`sitemap.xml`](https://erditech.com/laser-rangefinder-module-database/sitemap.xml).
 
 ## Files
 
@@ -79,7 +79,7 @@ Every page states the filter rule it uses, so the selection can be reproduced fr
 
 ```python
 import pandas as pd
-df = pd.read_csv("https://erditech.github.io/laser-rangefinder-module-database/data/modules.csv")
+df = pd.read_csv("https://erditech.com/laser-rangefinder-module-database/data/modules.csv")
 km = df[(df.max_range_m >= 1000) & (df.weight_g <= 30)]
 print(km.sort_values("weight_g")[["brand", "model", "wavelength_nm", "max_range_m", "range_condition", "weight_g", "price_public_usd"]])
 ```

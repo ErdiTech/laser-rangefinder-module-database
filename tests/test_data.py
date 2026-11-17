@@ -69,7 +69,7 @@ def test_generated_pages_are_crawlable():
     locs = re.findall(r"<loc>([^<]+)</loc>", sm)
     assert len(locs) >= 15
     llms = open(os.path.join(HERE, "docs", "llms.txt"), encoding="utf-8").read()
-    base = "https://erditech.github.io/laser-rangefinder-module-database/"
+    base = "https://erditech.com/laser-rangefinder-module-database/"
     for u in locs:
         rel = u[len(base):]
         if rel.startswith("data/"):

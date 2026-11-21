@@ -147,6 +147,10 @@ Archived on Zenodo: [doi:10.5281/zenodo.24125641](https://doi.org/10.5281/zenodo
 
 A [`CITATION.cff`](CITATION.cff) file is included (GitHub shows a "Cite this repository" button). Please also link the manufacturer `source_url` when you quote a single module's specification.
 
+## Questions and help
+
+Questions about a listed module, a value in the data, or how to wire one up: ask on the [ERDI engineering Q&A forum](https://community.erditech.com/?utm_source=github&utm_medium=readme&utm_campaign=laser-rangefinder-module-database). Corrections to the data itself still go through a pull request or an issue here, as described above.
+
 ## Related
 
 - [awesome-laser-rangefinder](https://github.com/ErdiTech/awesome-laser-rangefinder): manufacturers, drivers, flight-controller integration, guides

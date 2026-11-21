@@ -8,6 +8,9 @@ sorting/filtering to the main table, everything is readable without it.
 Usage: python scripts/build_views.py
 """
 import csv
+import datetime
+import functools
+import subprocess
 import html
 import io
 import json
@@ -26,6 +29,8 @@ E = html.escape
 ROWS = load()
 DATE = data_date(ROWS)
 DOCS = os.path.join(ROOT, "docs")
+YEAR = datetime.date.today().year
+PAGE_DATES = {}
 PAGES = []  # (path relative to SITE, title, description) for sitemap / llms.txt
 ORG = {"@type": "Organization", "name": "ERDI TECH LTD", "url": "https://erdilrf.com/"}
 
@@ -129,8 +134,36 @@ form.f label{font-size:.85em;display:flex;flex-direction:column}form.f input,for
 th[data-k]{cursor:pointer}footer{margin-top:2em;font-size:.85em;color:var(--muted)}ul.cols{columns:2 22rem}"""
 
 
+@functools.lru_cache(maxsize=None)
+def source_modified(*paths):
+    dates = []
+    for path in paths:
+        result = subprocess.run(
+            ["git", "log", "-1", "--format=%cs", "--", path], cwd=ROOT,
+            capture_output=True, text=True, check=True)
+        value = result.stdout.strip()
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            dates.append(value)
+    if not dates:
+        raise RuntimeError("Source history required for dateModified")
+    return max(dates)
+
+
 def page(rel, title, desc, body, jsonld, extra_head=""):
     canon = SITE + rel
+    modified = source_modified("data/modules.json", "scripts/build_views.py", "scripts/common.py")
+    PAGE_DATES[rel] = modified
+    if rel.startswith(("compare/", "guides/", "alternatives/")):
+        title = f"{title} ({YEAR})"
+        desc = f"{YEAR}: {desc}"
+        body = re.sub(r"(<h1[^>]*>)(.*?)(</h1>)",
+                      lambda m: f"{m[1]}{m[2]} ({YEAR}){m[3]}", body, count=1)
+    stamp = datetime.date.fromisoformat(modified).strftime("%b %Y")
+    body = re.sub(r"(</h1>)", rf'\1<p class="muted">Updated: {stamp}</p>', body, count=1)
+    jsonld = [dict(j, dateModified=modified) if j.get("@type") in
+              ("Article", "TechArticle", "WebPage", "Dataset") else j for j in jsonld]
+    jsonld.append({"@context": "https://schema.org", "@type": "WebPage",
+                   "url": canon, "name": title, "dateModified": modified})
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in jsonld)
     doc = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -256,6 +289,9 @@ def build_index():
     brands = sorted({short_brand(r["brand"]) for r in ROWS}, key=str.lower)
     body = f"""{nav()}
 <h1>Laser rangefinder module database</h1>
+<p>Official ERDI TECH LTD open engineering dataset, maintained in Chengdu, China.
+Contact Tommy Yu, Overseas Sales: <a href="mailto:tommy@erdimail.com">tommy@erdimail.com</a>;
+WhatsApp +86 133 0819 5790. <a href="https://erdilrf.com/">Product catalogue and enquiries</a>.</p>
 <p>Compare <strong>{N_MOD}</strong> single-point laser rangefinder / LiDAR distance modules ({EXTRA}; {n} rows) from
 {makers} manufacturers ({', '.join(E(b) for b in brands)}). Every value is copied from the manufacturer's own product page or datasheet,
 with the source link and the date it was read. Empty cell = the manufacturer does not publish that value.
@@ -660,12 +696,32 @@ def build_drone_classes():
 
 
 # ---------------------------------------------------------------- crawler files
+def build_best():
+    groups = [
+        ("Lightweight modules with published weight", sorted(
+            [r for r in RANGE_ROWS if r["category"] == "rangefinder module" and r.get("weight_g")],
+            key=lambda r: (r["weight_g"], name(r)))[:5]),
+        ("Modules with linked open-source drivers", sorted(
+            [r for r in RANGE_ROWS if r["category"] == "rangefinder module" and has_driver(r)],
+            key=name)[:5]),
+    ]
+    body = [nav(), "<h1>Best laser rangefinder modules by application</h1>",
+            "<p>Best depends on the integration: these transparent dataset filters are a shortlist, "
+            "not hands-on reviews or a universal ranking. Compare target conditions before selecting; "
+            "no customer reviews or procurement demand are implied.</p>"]
+    for heading, rows in groups:
+        body += [f"<h2>{heading}</h2>", table(rows, full_conditions=True)]
+    page("guides/best-laser-rangefinder-modules/", "Best laser rangefinder modules by application",
+         "Manufacturer-sourced shortlists for lightweight integration and linked open-source drivers, "
+         "with published range conditions and sources.", "\n".join(body), [])
+
+
 def build_crawler_files():
     urls = [SITE + p for p, _, _ in PAGES]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    sm += [f"<url><loc>{E(u)}</loc><lastmod>{DATE}</lastmod></url>" for u in urls]
-    sm += [f"<url><loc>{SITE}data/modules.csv</loc><lastmod>{DATE}</lastmod></url>",
-           f"<url><loc>{SITE}data/modules.json</loc><lastmod>{DATE}</lastmod></url>", "</urlset>"]
+    sm += [f"<url><loc>{E(SITE + p)}</loc><lastmod>{PAGE_DATES[p]}</lastmod></url>" for p, _, _ in PAGES]
+    sm += [f"<url><loc>{SITE}data/modules.csv</loc><lastmod>{source_modified("data/modules.json")}</lastmod></url>",
+           f"<url><loc>{SITE}data/modules.json</loc><lastmod>{source_modified("data/modules.json")}</lastmod></url>", "</urlset>"]
     write("docs/sitemap.xml", "\n".join(sm) + "\n")
     write("docs/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n")
     makers = ", ".join(b for b, _ in brand_counts())
@@ -694,6 +750,7 @@ def main():
     build_index()
     build_alternatives()
     build_guides()
+    build_best()
     build_wavelength()
     build_drone_classes()
     os.makedirs(os.path.join(DOCS, "data"), exist_ok=True)

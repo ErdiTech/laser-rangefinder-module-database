@@ -171,12 +171,12 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
     meta = [f"<span>{N_MOD} modules in the database</span>", f"<span>Data date {DATE}</span>"]
     if stamp_html:
         meta.insert(0, "<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>")
-    hero = (f'<section class="phero" data-dark data-glow style="--fx:{fx}">\n'
+    hero = (f'<section class="phero tool-hero-pc" data-pc="/assets/film/pc/cloud-d.bin" data-dark data-glow style="--fx:{fx}">\n'
             f'<div class="phero-media"><picture><source media="(max-width: 760px)" srcset="{img_m}" width="720" height="1280">'
-            f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture></div>\n'
+            f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture><canvas class="pc-canvas" aria-hidden="true"></canvas></div>\n'
             f'<div class="wrap"><div class="phero-copy"><p class="crumbs">{"".join(crumb)}</p>'
             f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1><div class="ph-meta">{"".join(meta)}</div></div></div>\n'
-            '<p class="beam-note">Beam drawn for illustration: 905 and 1535 nm light is invisible to the eye.</p>'
+            '<p class="beam-note">Real lidar point cloud: USGS 3DEP, public domain (Colorado, 2020)</p>'
             '<span class="ph-line" aria-hidden="true"></span></section>\n')
     preload = (f'<link rel="preload" as="image" type="image/avif" href="{img[:-5]}.avif" media="(min-width: 761px)" fetchpriority="high">\n'
                f'<link rel="preload" as="image" href="{img_m}" media="(max-width: 760px)" fetchpriority="high">')
@@ -202,7 +202,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
 Maintained by ERDI TECH LTD (<a href="https://erdilrf.com/">erdilrf.com</a>), which also makes some of the listed modules.</p>
 </div></main>
 {UI.FOOTER}{UI.SPEC}
-{UI.SCRIPTS}
+{UI.SCRIPTS}{UI.PCJS}
 </body></html>
 """
     write(os.path.join("docs", rel, "index.html") if not rel.endswith(".html") else os.path.join("docs", rel), doc)
@@ -230,9 +230,9 @@ COLS = [  # key, header, renderer, numeric?
     ("model", "Model", lambda r: f'<a href="{E(r["product_url"])}">{E(r["model"])}</a>', False),
     ("wl", "nm", lambda r: fmt_num(r["wavelength_nm"]), True),
     ("max", "Max range", lambda r: fmt_range(r["max_range_m"]), True),
-    ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E), False),
+    ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E, 90), False),
     ("min", "Min (m)", lambda r: fmt_num(r["min_range_m"]), True),
-    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 220), False),
+    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 90), False),
     ("rate", "Rate", lambda r: E(SC.clean(cell(r["rate_hz"]))), False),
     ("if", "Interface", lambda r: E(cell(r["interface"])), False),
     ("w", "Weight (g)", lambda r: fmt_num(r["weight_g"]), True),

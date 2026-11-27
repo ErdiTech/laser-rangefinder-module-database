@@ -167,7 +167,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
              f'<a href="{SITE}">Module database</a>']
     if section:
         crumb += ['<span aria-hidden="true">/</span>', f'<a href="{SITE}{section}/">{UI.SECTION_NAMES.get(section, section)}</a>']
-    meta = [f"<span>{N_MOD} modules</span>", f"<span>Data date {DATE}</span>"]
+    meta = [f"<span>{N_MOD} modules in the database</span>", f"<span>Data date {DATE}</span>"]
     if stamp_html:
         meta.insert(0, "<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>")
     hero = (f'<section class="phero" data-dark data-glow style="--fx:{fx}">\n'
@@ -228,7 +228,7 @@ COLS = [  # key, header, renderer, numeric?
     ("model", "Model", lambda r: f'<a href="{E(r["product_url"])}">{E(r["model"])}</a>', False),
     ("wl", "nm", lambda r: fmt_num(r["wavelength_nm"]), True),
     ("max", "Max range", lambda r: fmt_range(r["max_range_m"]), True),
-    ("cond", "Range condition", lambda r: E(cell(r["range_condition"])[:160]), False),
+    ("cond", "Range condition", lambda r: UI.cond_html(cell(r["range_condition"]), E), False),
     ("min", "Min m", lambda r: fmt_num(r["min_range_m"]), True),
     ("acc", "Accuracy", lambda r: E(cell(r["accuracy"])), False),
     ("rate", "Rate", lambda r: E(cell(r["rate_hz"])), False),

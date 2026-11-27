@@ -238,7 +238,7 @@ COLS = [  # key, header, renderer, numeric?
     ("w", "Weight (g)", lambda r: fmt_num(r["weight_g"]), True),
     ("usd", "USD", lambda r: fmt_num(r["price_public_usd"]), True),
     ("drv", "Driver", drv_html, False),
-    ("src", "Source", lambda r: f'<a href="{E(r["source_url"])}">source</a> <span class="muted">{r["captured_at"]}</span>', False),
+    ("src", "Source", lambda r: f'<a href="{E(r["source_url"])}" title="captured {r["captured_at"]}">source ↗</a>', False),
 ]
 
 

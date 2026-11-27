@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (FIELDS, REPO, ROOT, SITE, data_date, fmt_num, fmt_range, has_driver, iface_tags, load,  # noqa
                     price_band, row_id, short_brand, wl_class)
 import site_chrome as UI  # noqa: E402  shared erditech.com navigation, footer and design system links
+import site_clean as SC  # noqa: E402  display-only cleanup of editor notes in spec cells
 
 E = html.escape
 ROWS = load()
@@ -229,14 +230,14 @@ COLS = [  # key, header, renderer, numeric?
     ("model", "Model", lambda r: f'<a href="{E(r["product_url"])}">{E(r["model"])}</a>', False),
     ("wl", "nm", lambda r: fmt_num(r["wavelength_nm"]), True),
     ("max", "Max range", lambda r: fmt_range(r["max_range_m"]), True),
-    ("cond", "Range condition", lambda r: UI.cond_html(cell(r["range_condition"]), E), False),
-    ("min", "Min m", lambda r: fmt_num(r["min_range_m"]), True),
-    ("acc", "Accuracy", lambda r: E(cell(r["accuracy"])), False),
-    ("rate", "Rate", lambda r: E(cell(r["rate_hz"])), False),
+    ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E), False),
+    ("min", "Min (m)", lambda r: fmt_num(r["min_range_m"]), True),
+    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 90), False),
+    ("rate", "Rate", lambda r: E(SC.clean(cell(r["rate_hz"]))), False),
     ("if", "Interface", lambda r: E(cell(r["interface"])), False),
-    ("w", "Weight g", lambda r: fmt_num(r["weight_g"]), True),
-    ("usd", "USD (1 pc)", lambda r: fmt_num(r["price_public_usd"]), True),
-    ("drv", "Open-source driver", drv_html, False),
+    ("w", "Weight (g)", lambda r: fmt_num(r["weight_g"]), True),
+    ("usd", "USD", lambda r: fmt_num(r["price_public_usd"]), True),
+    ("drv", "Driver", drv_html, False),
     ("src", "Source", lambda r: f'<a href="{E(r["source_url"])}">source</a> <span class="muted">{r["captured_at"]}</span>', False),
 ]
 

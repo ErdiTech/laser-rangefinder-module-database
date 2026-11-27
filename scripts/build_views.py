@@ -175,6 +175,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
             f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture></div>\n'
             f'<div class="wrap"><div class="phero-copy"><p class="crumbs">{"".join(crumb)}</p>'
             f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1><div class="ph-meta">{"".join(meta)}</div></div></div>\n'
+            '<p class="beam-note">Beam drawn for illustration: 905 and 1535 nm light is invisible to the eye.</p>'
             '<span class="ph-line" aria-hidden="true"></span></section>\n')
     preload = (f'<link rel="preload" as="image" type="image/avif" href="{img[:-5]}.avif" media="(min-width: 761px)" fetchpriority="high">\n'
                f'<link rel="preload" as="image" href="{img_m}" media="(max-width: 760px)" fetchpriority="high">')
@@ -246,7 +247,7 @@ def table(rows, cols=None, self_row=None, extra=None, sortable=False, full_condi
     th = "".join(f'<th data-k="{k}">{h}</th>' if sortable else f"<th>{h}</th>" for k, h, _, _ in spec)
     if extra:
         th += f"<th>{extra[0]}</th>"
-    out = [f'<div class="tbl"><table{" id=t" if sortable else ""}><thead><tr>{th}</tr></thead><tbody>']
+    out = [f'<div class="tbl"><table class="cards"{" id=t" if sortable else ""}><thead><tr>{th}</tr></thead><tbody>']
     for r in rows:
         attrs = ""
         if sortable:

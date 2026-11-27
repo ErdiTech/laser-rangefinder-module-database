@@ -24,6 +24,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (FIELDS, REPO, ROOT, SITE, data_date, fmt_num, fmt_range, has_driver, iface_tags, load,  # noqa
                     price_band, row_id, short_brand, wl_class)
+import site_chrome as UI  # noqa: E402  shared erditech.com navigation, footer and design system links
 
 E = html.escape
 ROWS = load()
@@ -121,17 +122,7 @@ def update_readme():
 
 
 # ---------------------------------------------------------------- HTML helpers
-CSS = """:root{--fg:#1b1f24;--muted:#57606a;--bg:#fff;--line:#d0d7de;--head:#f6f8fa;--link:#0550ae;--hl:#fff8c5}
-@media (prefers-color-scheme:dark){:root{--fg:#e6edf3;--muted:#9da7b3;--bg:#0d1117;--line:#30363d;--head:#161b22;--link:#58a6ff;--hl:#3b2e00}}
-*{box-sizing:border-box}body{font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--fg);background:var(--bg);margin:0 auto;padding:16px;max-width:1500px}
-a{color:var(--link)}h1{font-size:1.6rem;margin:.3em 0}h2{font-size:1.2rem;margin-top:1.6em}p,li{max-width:80ch}
-.muted{color:var(--muted);font-size:.9em}nav{font-size:.9em;margin-bottom:.5em}
-.wrap{overflow-x:auto;border:1px solid var(--line)}table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{border-bottom:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
-th{background:var(--head);position:sticky;top:0;white-space:nowrap}td.n{text-align:right;white-space:nowrap}
-tr.self td{background:var(--hl)}form.f{display:flex;flex-wrap:wrap;gap:8px 14px;margin:10px 0;align-items:end}
-form.f label{font-size:.85em;display:flex;flex-direction:column}form.f input,form.f select{padding:5px;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line)}
-th[data-k]{cursor:pointer}footer{margin-top:2em;font-size:.85em;color:var(--muted)}ul.cols{columns:2 22rem}"""
+CSS = """.prose .wrap{overflow-x:auto}"""
 
 
 @functools.lru_cache(maxsize=None)
@@ -165,19 +156,51 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
     jsonld.append({"@context": "https://schema.org", "@type": "WebPage",
                    "url": canon, "name": title, "dateModified": modified})
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in jsonld)
+    section = rel.split("/")[0] if "/" in rel else ""
+    img, img_m, fx = UI.HEROES.get(section, UI.HEROES[""])
+    m = re.search(r"<h1[^>]*>(.*?)</h1>(<p class=\"muted\">Updated: [^<]*</p>)?", body, re.S)
+    h1_html = m.group(1) if m else E(title)
+    stamp_html = m.group(2) or "" if m else ""
+    if m:
+        body = body.replace(m.group(0), "", 1)
+    crumb = ['<a href="https://erditech.com/">ERDI TECH</a>', '<span aria-hidden="true">/</span>',
+             f'<a href="{SITE}">Module database</a>']
+    if section:
+        crumb += ['<span aria-hidden="true">/</span>', f'<a href="{SITE}{section}/">{UI.SECTION_NAMES.get(section, section)}</a>']
+    meta = [f"<span>{N_MOD} modules</span>", f"<span>Data date {DATE}</span>"]
+    if stamp_html:
+        meta.insert(0, "<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>")
+    hero = (f'<section class="phero" data-dark data-glow style="--fx:{fx}">\n'
+            f'<div class="phero-media"><picture><source media="(max-width: 760px)" srcset="{img_m}" width="720" height="1280">'
+            f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture></div>\n'
+            f'<div class="wrap"><div class="phero-copy"><p class="crumbs">{"".join(crumb)}</p>'
+            f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1><div class="ph-meta">{"".join(meta)}</div></div></div>\n'
+            '<span class="ph-line" aria-hidden="true"></span></section>\n')
+    preload = (f'<link rel="preload" as="image" type="image/avif" href="{img[:-5]}.avif" media="(min-width: 761px)" fetchpriority="high">\n'
+               f'<link rel="preload" as="image" href="{img_m}" media="(max-width: 760px)" fetchpriority="high">')
     doc = f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{E(title)}</title>
 <meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{canon}">
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{canon}"><meta property="og:type" content="website">
+<meta name="theme-color" content="#0b1424">
+{preload}
+{UI.HEAD}
 <style>{CSS}</style>
 {ld}{extra_head}
 </head><body>
+<a class="skip" href="#main">Skip to content</a>
+{UI.SPRITE}
+{UI.NAV}
+{hero}<main id="main" class="page-body"><div class="wrap prose">
 {body}
-<footer>Laser rangefinder module database · data date {DATE} · values copied from each manufacturer's public page or datasheet, linked per row ·
+<p class="gen-note">Laser rangefinder module database · data date {DATE} · values copied from each manufacturer's public page or datasheet, linked per row ·
 <a href="{REPO}">GitHub</a> (MIT; corrections welcome as pull requests) · <a href="{SITE}data/modules.csv">CSV</a> · <a href="{SITE}data/modules.json">JSON</a> ·
-Maintained by ERDI TECH LTD (<a href="https://erdilrf.com/">erdilrf.com</a>), which also makes some of the listed modules.</footer>
+Maintained by ERDI TECH LTD (<a href="https://erdilrf.com/">erdilrf.com</a>), which also makes some of the listed modules.</p>
+</div></main>
+{UI.FOOTER}{UI.SPEC}
+{UI.SCRIPTS}
 </body></html>
 """
     write(os.path.join("docs", rel, "index.html") if not rel.endswith(".html") else os.path.join("docs", rel), doc)
@@ -223,7 +246,7 @@ def table(rows, cols=None, self_row=None, extra=None, sortable=False, full_condi
     th = "".join(f'<th data-k="{k}">{h}</th>' if sortable else f"<th>{h}</th>" for k, h, _, _ in spec)
     if extra:
         th += f"<th>{extra[0]}</th>"
-    out = [f'<div class="wrap"><table{" id=t" if sortable else ""}><thead><tr>{th}</tr></thead><tbody>']
+    out = [f'<div class="tbl"><table{" id=t" if sortable else ""}><thead><tr>{th}</tr></thead><tbody>']
     for r in rows:
         attrs = ""
         if sortable:

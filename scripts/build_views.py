@@ -172,7 +172,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
     if stamp_html:
         meta.insert(0, "<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>")
     hero = (f'<section class="phero tool-hero-pc" data-pc="/assets/film/pc/cloud-d.bin" data-dark data-glow style="--fx:{fx}">\n'
-            f'<div class="phero-media"><picture><source media="(max-width: 760px)" srcset="{img_m}" width="720" height="1280">'
+            f'<div class="phero-media"><picture><source media="(max-width: 760px)" srcset="{img_m}" width="540" height="960">'
             f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture><canvas class="pc-canvas" aria-hidden="true"></canvas></div>\n'
             f'<div class="wrap"><div class="phero-copy"><p class="crumbs">{"".join(crumb)}</p>'
             f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1><div class="ph-meta">{"".join(meta)}</div></div></div>\n'

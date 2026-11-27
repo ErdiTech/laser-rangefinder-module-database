@@ -232,7 +232,7 @@ COLS = [  # key, header, renderer, numeric?
     ("max", "Max range", lambda r: fmt_range(r["max_range_m"]), True),
     ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E), False),
     ("min", "Min (m)", lambda r: fmt_num(r["min_range_m"]), True),
-    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 90), False),
+    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 220), False),
     ("rate", "Rate", lambda r: E(SC.clean(cell(r["rate_hz"]))), False),
     ("if", "Interface", lambda r: E(cell(r["interface"])), False),
     ("w", "Weight (g)", lambda r: fmt_num(r["weight_g"]), True),

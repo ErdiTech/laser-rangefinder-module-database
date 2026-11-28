@@ -161,6 +161,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
     img, img_m, fx = UI.HEROES.get(section, UI.HEROES[""])
     m = re.search(r"<h1[^>]*>(.*?)</h1>(<p class=\"muted\">Updated: [^<]*</p>)?", body, re.S)
     h1_html = m.group(1) if m else E(title)
+    h1_html = re.sub(r"\s*\(20\d\d\)\s*$", "", h1_html)   # the year lives in the Updated chip, not the headline
     stamp_html = m.group(2) or "" if m else ""
     if m:
         body = body.replace(m.group(0), "", 1)
@@ -168,14 +169,17 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
              f'<a href="{SITE}">Module database</a>']
     if section:
         crumb += ['<span aria-hidden="true">/</span>', f'<a href="{SITE}{section}/">{UI.SECTION_NAMES.get(section, section)}</a>']
-    meta = [f"<span>{N_MOD} modules in the database</span>", f"<span>Data date {DATE}</span>"]
-    if stamp_html:
-        meta.insert(0, "<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>")
+    meta = [f"<span>{N_MOD} modules in the database</span>"]
+    meta.append("<span>" + re.sub(r"<[^>]+>", "", stamp_html) + "</span>" if stamp_html else f"<span>Data date {DATE}</span>")
+    lm = re.search(r"<p><strong>([^<]{3,80})</strong>[^<]{0,160}? match:", body)
+    lede = f'<p class="ph-lede"><strong>{lm.group(1)}</strong> match this brief. The full table is below.</p>' if lm else ""
+    cta = ('<div class="ph-cta"><a class="btn btn-red" href="https://erdilrf.com/contact/" data-magnetic>Get a quote</a>'
+           '<a class="btn btn-ghost" href="#main">See the table</a></div>')
     hero = (f'<section class="phero tool-hero-pc" data-pc="/assets/film/pc/cloud-d.bin" data-dark data-glow style="--fx:{fx}">\n'
             f'<div class="phero-media"><picture><source media="(max-width: 760px)" srcset="{img_m}" width="540" height="960">'
             f'<source media="(min-width: 761px)" type="image/avif" srcset="{img[:-5]}.avif"><img src="{img}" alt="" width="1600" height="900" fetchpriority="high" decoding="async"></picture><canvas class="pc-canvas" aria-hidden="true"></canvas></div>\n'
             f'<div class="wrap"><div class="phero-copy"><p class="crumbs">{"".join(crumb)}</p>'
-            f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1><div class="ph-meta">{"".join(meta)}</div></div></div>\n'
+            f'<h1{" class=" + chr(34) + "vt-database" + chr(34) if rel == "" else ""}>{h1_html}</h1>{lede}<div class="ph-meta">{"".join(meta)}</div>{cta}</div></div>\n'
             '<p class="beam-note">Real lidar point cloud: USGS 3DEP, public domain (Colorado, 2020)</p>'
             '<span class="ph-line" aria-hidden="true"></span></section>\n')
     preload = (f'<link rel="preload" as="image" type="image/avif" href="{img[:-5]}.avif" media="(min-width: 761px)" fetchpriority="high">\n'
@@ -201,7 +205,7 @@ def page(rel, title, desc, body, jsonld, extra_head=""):
 <a href="{REPO}">GitHub</a> (MIT; corrections welcome as pull requests) · <a href="{SITE}data/modules.csv">CSV</a> · <a href="{SITE}data/modules.json">JSON</a> ·
 Maintained by ERDI TECH LTD (<a href="https://erdilrf.com/">erdilrf.com</a>), which also makes some of the listed modules.</p>
 </div></main>
-{UI.FOOTER}{UI.SPEC}
+{UI.BEAT.replace("__N__", str(N_MOD))}{UI.FOOTER}{UI.SPEC}
 {UI.SCRIPTS}{UI.PCJS}
 </body></html>
 """
@@ -230,15 +234,15 @@ COLS = [  # key, header, renderer, numeric?
     ("model", "Model", lambda r: f'<a href="{E(r["product_url"])}">{E(r["model"])}</a>', False),
     ("wl", "nm", lambda r: fmt_num(r["wavelength_nm"]), True),
     ("max", "Max range", lambda r: fmt_range(r["max_range_m"]), True),
-    ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E, 90), False),
+    ("cond", "Range condition", lambda r: UI.cond_html(SC.clean(cell(r["range_condition"])), E, 44), False),
     ("min", "Min (m)", lambda r: fmt_num(r["min_range_m"]), True),
-    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 90), False),
+    ("acc", "Accuracy", lambda r: UI.cond_html(SC.clean(cell(r["accuracy"])), E, 30), False),
     ("rate", "Rate", lambda r: E(SC.clean(cell(r["rate_hz"]))), False),
     ("if", "Interface", lambda r: E(cell(r["interface"])), False),
     ("w", "Weight (g)", lambda r: fmt_num(r["weight_g"]), True),
     ("usd", "USD", lambda r: fmt_num(r["price_public_usd"]), True),
-    ("drv", "Driver", drv_html, False),
-    ("src", "Source", lambda r: f'<a href="{E(r["source_url"])}" title="captured {r["captured_at"]}">source ↗</a>', False),
+    ("drv", "Driver", lambda r: UI.drv_short(r, drv_html), False),
+    ("src", "Source", lambda r: f'<a href="{E(r["source_url"])}" title="captured {r["captured_at"]}">source ↗</a>{UI.quote(r, short_brand)}', False),
 ]
 
 
@@ -256,7 +260,8 @@ def table(rows, cols=None, self_row=None, extra=None, sortable=False, full_condi
                      f'data-if="{" ".join(iface_tags(r))}" data-price="{r.get("price_public_usd") or ""}" '
                      f'data-drv="{1 if has_driver(r) else 0}" data-cat="{E(r["category"])}" '
                      f'data-status="{r["status"]}"')
-        cls = ' class="self"' if r is self_row else ""
+        own = short_brand(r["brand"]).upper().startswith("ERDI")
+        cls = ' class="self"' if r is self_row else (' class="erdi"' if own else "")
         tds = "".join(f'<td{" class=n" if num else ""}>{E(cell(r["range_condition"])) if k == "cond" and full_conditions else fn(r)}</td>'
                       for k, _, fn, num in spec)
         if extra:
